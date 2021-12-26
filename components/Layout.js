@@ -5,13 +5,14 @@ import { AppBar, Toolbar, Typography, Container, Link } from '@mui/material'
 
 import useStyles from '../utils/styles'
 
-export default function Layout({ children }) {
+export default function Layout({ children, title, description }) {
   const classes = useStyles()
 
   return (
     <>
       <Head>
-        <title>Papermint</title>
+        <title>{title ? `${title} | Papermint` : 'Papermint'}</title>
+        {description && <meta name="description" content={description} />}
       </Head>
 
       <AppBar position="static" className={classes.navbar}>
