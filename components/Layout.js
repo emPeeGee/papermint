@@ -12,12 +12,15 @@ import {
 } from '@mui/material'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { styled } from '@mui/system'
 
-import useStyles from '../utils/styles'
 import { Store } from '../utils/store'
 
+const Separator = styled('div')({
+  flexGrow: 1,
+})
+
 export default function Layout({ children, title, description }) {
-  const classes = useStyles()
   const { state, dispatch } = useContext(Store)
   const { darkMode } = state
 
@@ -43,15 +46,31 @@ export default function Layout({ children, title, description }) {
 
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar position="static" className={classes.navbar}>
+        <AppBar
+          position="static"
+          sx={{
+            backgroundColor: '#203040',
+            '& a': {
+              color: '#ffffff',
+              marginLeft: 10,
+            },
+          }}
+        >
           <Toolbar>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={classes.brand}>Papermint</Typography>
+                <Typography
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: '1.5rem',
+                  }}
+                >
+                  Papermint
+                </Typography>
               </Link>
             </NextLink>
 
-            <div className={classes.grow}></div>
+            <Separator />
             <div>
               <Switch
                 checked={darkMode}
@@ -67,10 +86,24 @@ export default function Layout({ children, title, description }) {
           </Toolbar>
         </AppBar>
 
-        <Container className={classes.main}>{children}</Container>
+        <Container
+          sx={{
+            minHeight: '80vh',
+          }}
+        >
+          {children}
+        </Container>
 
-        <footer className={classes.footer}>
-          <Typography>All rights reserved. Paparmint</Typography>
+        <footer>
+          <Typography
+            sx={{
+              textAlign: 'center',
+              padding: '1rem 0',
+              marginTop: 10,
+            }}
+          >
+            All rights reserved. Paparmint
+          </Typography>
         </footer>
       </ThemeProvider>
     </>

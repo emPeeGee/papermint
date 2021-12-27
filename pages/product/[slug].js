@@ -13,10 +13,8 @@ import {
 
 import Layout from '../../components/Layout'
 import data from '../../utils/data'
-import useStyles from '../../utils/styles'
 
 export default function ProductScreen() {
-  const classes = useStyles()
   const router = useRouter()
   const { slug } = router.query
   const product = data.products.find((product) => product.slug === slug)
@@ -27,9 +25,17 @@ export default function ProductScreen() {
 
   return (
     <Layout title={product.name} description={product.description}>
-      <div className={classes.section}>
+      <div>
         <NextLink href="/" passHref>
-          <Link>back to products</Link>
+          <Link
+            sx={{
+              display: 'block',
+              marginTop: '1rem',
+              marginBottom: '1rem',
+            }}
+          >
+            back to products
+          </Link>
         </NextLink>
       </div>
 
@@ -67,38 +73,38 @@ export default function ProductScreen() {
         </Grid>
 
         <Grid item md={3} xs={12}>
-          <Card>
-            <List>
+          <Card
+            sx={{
+              padding: '8px',
+            }}
+          >
+            <Grid container>
               <ListItem>
                 <Grid container>
-                  <ListItem>
-                    <Grid container>
-                      <Grid item xs={6}>
-                        <Typography>Price</Typography>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Typography>${product.price}</Typography>
-                      </Grid>
-                    </Grid>
-                  </ListItem>
-                  <ListItem>
-                    <Grid item xs={6}>
-                      <Typography>Status</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography>
-                        ${product.countInStock > 0 ? 'In stock' : 'Unavailable'}
-                      </Typography>
-                    </Grid>
-                  </ListItem>
-                  <ListItem>
-                    <Button fullWidth variant="contained" color="primary">
-                      Add to cart
-                    </Button>
-                  </ListItem>
+                  <Grid item xs={6}>
+                    <Typography>Price</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography>${product.price}</Typography>
+                  </Grid>
                 </Grid>
               </ListItem>
-            </List>
+              <ListItem>
+                <Grid item xs={6}>
+                  <Typography>Status</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography>
+                    ${product.countInStock > 0 ? 'In stock' : 'Unavailable'}
+                  </Typography>
+                </Grid>
+              </ListItem>
+              <ListItem>
+                <Button fullWidth variant="contained" color="primary">
+                  Add to cart
+                </Button>
+              </ListItem>
+            </Grid>
           </Card>
         </Grid>
       </Grid>
