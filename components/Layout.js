@@ -1,12 +1,59 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Head from 'next/head'
 import NextLink from 'next/link'
-import { AppBar, Toolbar, Typography, Container, Link } from '@mui/material'
+import Cookies from 'js-cookie'
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Link,
+  Switch,
+} from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import { styled } from '@mui/system'
 
-import useStyles from '../utils/styles'
+import { Store } from '../utils/store'
+
+const Separator = styled('div')({
+  flexGrow: 1,
+})
 
 export default function Layout({ children, title, description }) {
-  const classes = useStyles()
+  const { state, dispatch } = useContext(Store)
+  const { darkMode } = state
+
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+      primary: {
+        main: '#f0c000',
+      },
+      secondary: {
+        main: '#208000',
+      },
+    },
+    typography: {
+      h1: {
+        fontSize: '1.6rem',
+        fontWeight: 400,
+        margin: '1rem 0',
+      },
+      h2: {
+        fontSize: '1.4rem',
+        fontWeight: 400,
+        margin: '1rem 0',
+      },
+    },
+  })
+
+  const darkModeChangeHandler = () => {
+    dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' })
+
+    const newDarkMode = !darkMode
+    Cookies.set('dark-mode', newDarkMode ? 'ON' : 'OFF')
+  }
 
   return (
     <>
@@ -15,31 +62,68 @@ export default function Layout({ children, title, description }) {
         {description && <meta name="description" content={description} />}
       </Head>
 
-      <AppBar position="static" className={classes.navbar}>
-        <Toolbar>
-          <NextLink href="/" passHref>
-            <Link>
-              <Typography className={classes.brand}>Papermint</Typography>
-            </Link>
-          </NextLink>
-
-          <div className={classes.grow}></div>
-          <div>
-            <NextLink href="/cart" passHref>
-              <Link>Cart</Link>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppBar
+          position="static"
+          sx={{
+            backgroundColor: '#203040',
+            '& a': {
+              color: '#ffffff',
+              marginLeft: 10,
+            },
+          }}
+        >
+          <Toolbar>
+            <NextLink href="/" passHref>
+              <Link>
+                <Typography
+                  sx={{
+                    fontWeight: 'bold',
+                    fontSize: '1.5rem',
+                  }}
+                >
+                  Papermint
+                </Typography>
+              </Link>
             </NextLink>
-          </div>
-          <NextLink href="/login" passHref>
-            <Link>Login</Link>
-          </NextLink>
-        </Toolbar>
-      </AppBar>
 
-      <Container className={classes.main}>{children}</Container>
+            <Separator />
+            <div>
+              <Switch
+                checked={darkMode}
+                onChange={darkModeChangeHandler}
+              ></Switch>
+              <NextLink href="/cart" passHref>
+                <Link>Cart</Link>
+              </NextLink>
+            </div>
+            <NextLink href="/login" passHref>
+              <Link>Login</Link>
+            </NextLink>
+          </Toolbar>
+        </AppBar>
 
-      <footer className={classes.footer}>
-        <Typography>All rights reserved. Paparmint</Typography>
-      </footer>
+        <Container
+          sx={{
+            minHeight: '80vh',
+          }}
+        >
+          {children}
+        </Container>
+
+        <footer>
+          <Typography
+            sx={{
+              textAlign: 'center',
+              padding: '1rem 0',
+              marginTop: 10,
+            }}
+          >
+            All rights reserved. Paparmint
+          </Typography>
+        </footer>
+      </ThemeProvider>
     </>
   )
 }
